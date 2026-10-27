@@ -33,17 +33,13 @@ locals {
 
   subnets = join(",", data.aws_subnets.api.ids)
 
-  dockerrun = jsonencode({
-    AWSEBDockerrunVersion = "1"
-    Image = {
-      Name   = "${aws_ecr_repository.api.repository_url}:latest"
-      Update = "true"
-    }
-    Ports = [
-      {
-        ContainerPort = 8080
+  compose = yamlencode({
+    services = {
+      api = {
+        image        = "${aws_ecr_repository.api.repository_url}:latest"
+        network_mode = "host"
       }
-    ]
+    }
   })
 
   api_env = {
@@ -51,8 +47,14 @@ locals {
     SPRING_DATASOURCE_URL                = "jdbc:postgresql://${aws_db_instance.nfse.address}:${aws_db_instance.nfse.port}/nfse"
     SPRING_DATASOURCE_USERNAME           = "nfse"
     SPRING_DATASOURCE_PASSWORD           = local.rds_segredo.password
+    SPRING_PROFILES_ACTIVE               = "aws"
     SCHEDULER_RECEPCAODFESSERPRO_ENABLED = "false"
     JAVA_TOOL_OPTIONS                    = "-XX:MaxRAMPercentage=75.0"
+    AWS_REGION                           = var.aws_region
+    AWS_DEFAULT_REGION                   = var.aws_region
+    RELATORIO_FILA                       = aws_sqs_queue.relatorios.name
+    RELATORIO_BUCKET                     = aws_s3_bucket.relatorios.bucket
+    RELATORIO_REGIAO                     = var.aws_region
   }
 }
 
@@ -174,8 +176,8 @@ data "archive_file" "api" {
   output_path = "${path.module}/build/api-eb.zip"
 
   source {
-    content  = local.dockerrun
-    filename = "Dockerrun.aws.json"
+    content  = local.compose
+    filename = "docker-compose.yml"
   }
 }
 
@@ -354,6 +356,9 @@ resource "aws_elastic_beanstalk_environment" "api" {
     aws_iam_role_policy_attachment.eb_ec2_web,
     aws_iam_role_policy_attachment.eb_ec2_ecr,
     aws_db_instance.nfse,
+    aws_sqs_queue.relatorios,
+    aws_s3_bucket.relatorios,
+    aws_iam_role_policy.eb_ec2_relatorio,
   ]
 
   lifecycle {

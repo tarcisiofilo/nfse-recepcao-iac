@@ -13,8 +13,9 @@ O estado mora no S3. O GitHub Actions aplica na `main` e planeja nas pull reques
 - RDS Postgres 16, banco `nfse`, usuário `nfse`. Senha no Secrets Manager. Porta 5432 só do security group da API. Sem IP público. O schema `nfse_nacional` o Liquibase cria no primeiro boot da API.
 - Elastic Beanstalk Docker AL2023, uma instância `t3.small`, ALB na porta 80. Só usa as subnets das AZs que oferecem esse tipo (a VPC padrão inclui `us-east-1e`, sem `t3.small`). A imagem é `${repository_url}:latest`. Scheduler desligado. Sem certificado ADN. A senha do RDS vai para as variáveis do ambiente (e para o estado do Terraform).
 - Health check em `GET /nfse/totais`. O Liquibase roda nesse primeiro boot.
+- Fila SQS `nfse-relatorios` e bucket `nfse-recepcao-relatorios-<conta>`. A API no perfil `aws` grava `relatorios/{id}/relatorio.zip`. Scheduler ADN continua desligado.
 
-Sem HTTPS, fila, Lambda nem dashboard. Se o CI publicar uma imagem nova, o Beanstalk não puxa sozinho até um novo deploy.
+Sem HTTPS, Lambda nem dashboard. Merge a PR da API e espera o CI publicar a imagem **antes** do apply desta infra, senão o ambiente sobe com o jar antigo.
 
 ## Como muda a infra
 
