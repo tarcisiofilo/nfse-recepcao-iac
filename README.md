@@ -11,9 +11,10 @@ O estado mora no S3. O GitHub Actions aplica na `main` e planeja nas pull reques
 - Bucket `nfse-recepcao-iac-estado-069632764371` com o estado. O nome traz a conta porque o backend S3 não aceita variável.
 
 - RDS Postgres 16, banco `nfse`, usuário `nfse`. Senha no Secrets Manager. Porta 5432 só do security group da API. Sem IP público. O schema `nfse_nacional` o Liquibase cria no primeiro boot da API.
-- Security group `nfse-recepcao-api` ainda sem instância; o Beanstalk entra nele na próxima PR.
+- Elastic Beanstalk Docker AL2023, uma instância `t3.small`, ALB na porta 80. A imagem é `${repository_url}:latest`. Scheduler desligado. Sem certificado ADN. A senha do RDS vai para as variáveis do ambiente (e para o estado do Terraform).
+- Health check em `GET /nfse/totais`. O Liquibase roda nesse primeiro boot.
 
-Sem Beanstalk, fila e Lambda.
+Sem HTTPS, fila, Lambda nem dashboard. Se o CI publicar uma imagem nova, o Beanstalk não puxa sozinho até um novo deploy.
 
 ## Como muda a infra
 

@@ -16,6 +16,12 @@ variable "db_instance_class" {
   default     = "db.t4g.micro"
 }
 
+variable "api_instance_type" {
+  type        = string
+  description = "Instância da API. t3.small (x86) porque a imagem do Docker é amd64."
+  default     = "t3.small"
+}
+
 variable "github_owner" {
   type        = string
   description = "Dono do repositório da API no GitHub."
