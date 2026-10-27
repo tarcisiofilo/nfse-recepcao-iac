@@ -62,3 +62,13 @@ output "api_environment_name" {
   description = "Nome do ambiente no Elastic Beanstalk."
   value       = aws_elastic_beanstalk_environment.api.name
 }
+
+output "relatorio_fila" {
+  description = "Nome da fila SQS dos pedidos de Excel."
+  value       = aws_sqs_queue.relatorios.name
+}
+
+output "relatorio_bucket" {
+  description = "Bucket dos zips. Chave relatorios/{id}/relatorio.zip"
+  value       = aws_s3_bucket.relatorios.bucket
+}
