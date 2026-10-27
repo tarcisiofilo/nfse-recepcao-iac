@@ -46,17 +46,16 @@ resource "aws_db_instance" "nfse" {
 
   manage_master_user_password = true
 
-  allocated_storage     = 20
-  max_allocated_storage = 100
-  storage_type          = "gp3"
-  storage_encrypted     = true
+  allocated_storage = 20
+  storage_type      = "gp3"
+  storage_encrypted = true
 
   db_subnet_group_name   = aws_db_subnet_group.nfse.name
   vpc_security_group_ids = [aws_security_group.rds.id]
   publicly_accessible    = false
   multi_az               = false
 
-  backup_retention_period = 7
+  backup_retention_period = 0
   skip_final_snapshot     = true
   deletion_protection     = false
 
