@@ -36,6 +36,18 @@ variable "github_repository_id" {
 
 variable "github_branch" {
   type        = string
-  description = "Branch que pode publicar a imagem."
+  description = "Branch que pode publicar a imagem e aplicar a infra."
   default     = "main"
+}
+
+variable "github_iac_repository" {
+  type        = string
+  description = "Repositório Terraform no GitHub."
+  default     = "nfse-recepcao-iac"
+}
+
+variable "github_iac_repository_id" {
+  type        = string
+  description = "ID numérico do repositório Terraform."
+  default     = "1434723467"
 }
