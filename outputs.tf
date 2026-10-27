@@ -32,3 +32,23 @@ output "estado_bucket" {
   description = "Bucket do estado do Terraform."
   value       = aws_s3_bucket.estado.bucket
 }
+
+output "rds_address" {
+  description = "Host do Postgres. A API usa na SPRING_DATASOURCE_URL."
+  value       = aws_db_instance.nfse.address
+}
+
+output "rds_port" {
+  description = "Porta do Postgres."
+  value       = aws_db_instance.nfse.port
+}
+
+output "rds_secret_arn" {
+  description = "Segredo com o usuário e a senha. A API não lê o Git."
+  value       = aws_db_instance.nfse.master_user_secret[0].secret_arn
+}
+
+output "security_group_api_id" {
+  description = "Security group da API. O Beanstalk entra nele."
+  value       = aws_security_group.api.id
+}

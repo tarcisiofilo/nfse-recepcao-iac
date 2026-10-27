@@ -10,6 +10,12 @@ variable "repository_name" {
   default     = "nfse-recepcao"
 }
 
+variable "db_instance_class" {
+  type        = string
+  description = "Tamanho do RDS. db.t4g.micro basta para o primeiro ar."
+  default     = "db.t4g.micro"
+}
+
 variable "github_owner" {
   type        = string
   description = "Dono do repositório da API no GitHub."
