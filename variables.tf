@@ -63,3 +63,15 @@ variable "github_iac_repository_id" {
   description = "ID numérico do repositório Terraform."
   default     = "1434723467"
 }
+
+variable "github_dashboard_repository" {
+  type        = string
+  description = "Repositório do dashboard no GitHub."
+  default     = "nfse-dashboard"
+}
+
+variable "github_dashboard_repository_id" {
+  type        = string
+  description = "ID numérico do repositório do dashboard."
+  default     = "1435794919"
+}
