@@ -87,3 +87,23 @@ output "github_dashboard_role_arn" {
   description = "Role que a Actions do dashboard assume. Variável AWS_ROLE_ARN desse repositório."
   value       = aws_iam_role.github_dashboard.arn
 }
+
+output "cognito_user_pool_id" {
+  description = "User Pool. Convite do primeiro usuário é no console, Create user."
+  value       = aws_cognito_user_pool.login.id
+}
+
+output "cognito_client_id" {
+  description = "App client público do dashboard. Sem secret."
+  value       = aws_cognito_user_pool_client.dashboard.id
+}
+
+output "cognito_domain" {
+  description = "Host da hosted UI. Variável VITE_COGNITO_DOMAIN do dashboard, sem https."
+  value       = "${aws_cognito_user_pool_domain.login.domain}.auth.${var.aws_region}.amazoncognito.com"
+}
+
+output "cognito_issuer" {
+  description = "Issuer JWT. Variável COGNITO_ISSUER da API."
+  value       = "https://cognito-idp.${var.aws_region}.amazonaws.com/${aws_cognito_user_pool.login.id}"
+}
