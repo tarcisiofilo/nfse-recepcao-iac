@@ -14,9 +14,7 @@ O estado mora no S3. O GitHub Actions aplica na `main` e planeja nas pull reques
 - Elastic Beanstalk Docker AL2023, uma instância `t3.small`, ALB na porta 80. Só usa as subnets das AZs que oferecem esse tipo (a VPC padrão inclui `us-east-1e`, sem `t3.small`). A imagem é `${repository_url}:latest`. Scheduler desligado. Sem certificado ADN. A senha do RDS vai para as variáveis do ambiente (e para o estado do Terraform).
 - Health check em `GET /nfse/totais`. O Liquibase roda nesse primeiro boot.
 - Fila SQS `nfse-relatorios` e bucket `nfse-recepcao-relatorios-<conta>`. A API no perfil `aws` grava `relatorios/{id}/relatorio.zip`. Scheduler ADN continua desligado.
-- CloudFront + S3 do dashboard. `/nfse*` vai para o Beanstalk. Sem certificado ADN.
-
-Depois do apply: no repositório [nfse-dashboard](https://github.com/tarcisiofilo/nfse-dashboard) as variáveis `AWS_ROLE_ARN` (output `github_dashboard_role_arn`), `AWS_S3_BUCKET`, `AWS_CLOUDFRONT_DISTRIBUTION_ID` e `AWS_REGION`. Aí o CI publica o site.
+- Site do dashboard no S3 (HTTP). CloudFront nesta conta pede verificação na AWS. O CI do [nfse-dashboard](https://github.com/tarcisiofilo/nfse-dashboard) publica na `main`.
 
 Sem Lambda. Scheduler ADN desligado.
 

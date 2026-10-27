@@ -74,18 +74,13 @@ output "relatorio_bucket" {
 }
 
 output "dashboard_url" {
-  description = "HTTPS do dashboard no CloudFront."
-  value       = "https://${aws_cloudfront_distribution.dashboard.domain_name}"
+  description = "HTTP do dashboard no S3. CloudFront pediu verificação da conta."
+  value       = "http://${aws_s3_bucket_website_configuration.dashboard.website_endpoint}"
 }
 
 output "dashboard_bucket" {
   description = "Bucket do site. Variável AWS_S3_BUCKET do nfse-dashboard."
   value       = aws_s3_bucket.dashboard.bucket
-}
-
-output "dashboard_distribution_id" {
-  description = "Distribuição CloudFront. Variável AWS_CLOUDFRONT_DISTRIBUTION_ID."
-  value       = aws_cloudfront_distribution.dashboard.id
 }
 
 output "github_dashboard_role_arn" {

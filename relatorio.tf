@@ -92,7 +92,7 @@ resource "aws_s3_bucket_cors_configuration" "relatorios" {
     allowed_origins = [
       "http://localhost:5173",
       "http://127.0.0.1:5173",
-      "https://${aws_cloudfront_distribution.dashboard.domain_name}",
+      "http://${aws_s3_bucket_website_configuration.dashboard.website_endpoint}",
     ]
     expose_headers  = ["Content-Length", "Content-Type"]
     max_age_seconds = 3000

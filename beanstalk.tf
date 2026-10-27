@@ -59,6 +59,11 @@ locals {
     RELATORIO_FILA                       = aws_sqs_queue.relatorios.name
     RELATORIO_BUCKET                     = aws_s3_bucket.relatorios.bucket
     RELATORIO_REGIAO                     = var.aws_region
+    API_CORS_ORIGENS = join(",", [
+      "http://localhost:5173",
+      "http://127.0.0.1:5173",
+      "http://${aws_s3_bucket_website_configuration.dashboard.website_endpoint}",
+    ])
   }
 }
 
