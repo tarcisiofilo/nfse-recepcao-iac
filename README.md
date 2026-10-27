@@ -2,22 +2,25 @@
 
 Infraestrutura da API `nfse-recepcao`, em Terraform. O código da aplicação fica no [nfse-recepcao](https://github.com/tarcisiofilo/nfse-recepcao).
 
-Existe o ECR e o login OIDC da Actions. Sem Beanstalk, RDS, fila e Lambda.
+O estado mora no S3. O GitHub Actions aplica na `main` e planeja nas pull requests. Sem apply no notebook, salvo desastre.
 
-## ECR
+## O que existe
 
-O repositório `nfse-recepcao` guarda as imagens da API. O scan roda no push. Imagens sem tag saem em 14 dias. A tag pode ser reescrita (`MUTABLE`) para o primeiro deploy.
+- ECR `nfse-recepcao` (imagem da API).
+- OIDC do GitHub e duas roles: uma só publica a imagem (`nfse-recepcao`), outra aplica este Terraform (`nfse-recepcao-iac`).
+- Bucket `nfse-recepcao-iac-estado-069632764371` com o estado. O nome traz a conta porque o backend S3 não aceita variável.
 
-A região padrão é `us-east-1`. Troque em `terraform.tfvars` se precisar. Não versionar `*.tfvars`.
+Sem Beanstalk, RDS, fila e Lambda.
 
-```hcl
-aws_region      = "us-east-1"
-repository_name = "nfse-recepcao"
-```
+## Como muda a infra
 
-## Comandos
+1. Branch e pull request neste repositório.
+2. O job **Terraform** roda `plan`.
+3. Merge na `main` roda `apply`.
 
-Não aplicar na AWS sem combinar. O estado ainda é local.
+Variáveis do repositório (Actions): `AWS_ROLE_ARN` (output `github_iac_role_arn`) e `AWS_REGION`.
+
+## Comandos locais (só conferência)
 
 ```bash
 terraform init
@@ -26,18 +29,4 @@ terraform validate
 terraform plan
 ```
 
-O `apply` cria o registro na conta configurada no AWS CLI. Sem conta, o `plan` também falha.
-
-## OIDC
-
-A role `github-nfse-recepcao-ecr` só aceita o GitHub Actions da `main` de `tarcisiofilo/nfse-recepcao`. O repositório da API nasceu depois de 15 de julho de 2026, então o subject leva os IDs imutáveis (`tarcisiofilo@29897751/nfse-recepcao@1434495499`). Sem access key.
-
-Depois do `apply`, copie os outputs `github_role_arn`, `repository_url` e `aws_region` para as variáveis do repositório da API:
-
-| Variável no GitHub | Output |
-| --- | --- |
-| `AWS_ROLE_ARN` | `github_role_arn` |
-| `AWS_ECR_REPOSITORY` | `repository_url` |
-| `AWS_REGION` | `aws_region` |
-
-Sem essas variáveis, o job de publicar não roda. O passo seguinte é hospedar a API (Elastic Beanstalk com Docker).
+O `apply` local não é o fluxo. O backend já aponta para o S3 da conta `069632764371`.

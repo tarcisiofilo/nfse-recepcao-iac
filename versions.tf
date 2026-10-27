@@ -7,6 +7,14 @@ terraform {
       version = "~> 5.100"
     }
   }
+
+  backend "s3" {
+    bucket       = "nfse-recepcao-iac-estado-069632764371"
+    key          = "terraform.tfstate"
+    region       = "us-east-1"
+    encrypt      = true
+    use_lockfile = true
+  }
 }
 
 provider "aws" {

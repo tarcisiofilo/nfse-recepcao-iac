@@ -22,3 +22,13 @@ output "github_oidc_sub" {
   description = "Subject que a role aceita. Só a main do nfse-recepcao."
   value       = local.github_oidc_sub
 }
+
+output "github_iac_role_arn" {
+  description = "Role que a Actions do nfse-recepcao-iac assume. Variável AWS_ROLE_ARN desse repositório."
+  value       = aws_iam_role.github_iac.arn
+}
+
+output "estado_bucket" {
+  description = "Bucket do estado do Terraform."
+  value       = aws_s3_bucket.estado.bucket
+}
