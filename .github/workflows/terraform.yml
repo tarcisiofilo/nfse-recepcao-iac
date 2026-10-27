@@ -17,7 +17,7 @@ concurrency:
 jobs:
   terraform:
     runs-on: ubuntu-latest
-    timeout-minutes: 20
+    timeout-minutes: 45
     env:
       TF_IN_AUTOMATION: true
     steps:

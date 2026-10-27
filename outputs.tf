@@ -52,3 +52,13 @@ output "security_group_api_id" {
   description = "Security group da API. O Beanstalk entra nele."
   value       = aws_security_group.api.id
 }
+
+output "api_cname" {
+  description = "DNS do ambiente. http://<este valor>/nfse/totais"
+  value       = aws_elastic_beanstalk_environment.api.cname
+}
+
+output "api_environment_name" {
+  description = "Nome do ambiente no Elastic Beanstalk."
+  value       = aws_elastic_beanstalk_environment.api.name
+}
