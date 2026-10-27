@@ -33,13 +33,17 @@ locals {
 
   subnets = join(",", data.aws_subnets.api.ids)
 
-  compose = yamlencode({
-    services = {
-      api = {
-        image        = "${aws_ecr_repository.api.repository_url}:latest"
-        network_mode = "host"
-      }
+  dockerrun = jsonencode({
+    AWSEBDockerrunVersion = "1"
+    Image = {
+      Name   = "${aws_ecr_repository.api.repository_url}:latest"
+      Update = "true"
     }
+    Ports = [
+      {
+        ContainerPort = 8080
+      }
+    ]
   })
 
   api_env = {
@@ -176,8 +180,8 @@ data "archive_file" "api" {
   output_path = "${path.module}/build/api-eb.zip"
 
   source {
-    content  = local.compose
-    filename = "docker-compose.yml"
+    content  = local.dockerrun
+    filename = "Dockerrun.aws.json"
   }
 }
 
