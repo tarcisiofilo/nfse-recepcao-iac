@@ -3,6 +3,27 @@ data "aws_elastic_beanstalk_solution_stack" "docker" {
   name_regex  = "^64bit Amazon Linux 2023 v[0-9.]+ running Docker$"
 }
 
+data "aws_ec2_instance_type_offerings" "api" {
+  filter {
+    name   = "instance-type"
+    values = [var.api_instance_type]
+  }
+
+  location_type = "availability-zone"
+}
+
+data "aws_subnets" "api" {
+  filter {
+    name   = "vpc-id"
+    values = [data.aws_vpc.padrao.id]
+  }
+
+  filter {
+    name   = "availability-zone"
+    values = data.aws_ec2_instance_type_offerings.api.locations
+  }
+}
+
 data "aws_secretsmanager_secret_version" "rds" {
   secret_id = aws_db_instance.nfse.master_user_secret[0].secret_arn
 }
@@ -10,7 +31,7 @@ data "aws_secretsmanager_secret_version" "rds" {
 locals {
   rds_segredo = jsondecode(data.aws_secretsmanager_secret_version.rds.secret_string)
 
-  subnets = join(",", data.aws_subnets.padrao.ids)
+  subnets = join(",", data.aws_subnets.api.ids)
 
   dockerrun = jsonencode({
     AWSEBDockerrunVersion = "1"
