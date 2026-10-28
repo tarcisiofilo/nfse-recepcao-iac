@@ -80,6 +80,41 @@ resource "aws_cognito_user_pool_client" "dashboard" {
 }
 
 resource "aws_cognito_user_pool_domain" "login" {
-  domain       = "nfse-login-${data.aws_caller_identity.atual.account_id}"
+  domain                = "nfse-login-${data.aws_caller_identity.atual.account_id}"
+  user_pool_id          = aws_cognito_user_pool.login.id
+  managed_login_version = 2
+}
+
+resource "aws_cognito_user_group" "admin" {
+  name         = "admin"
+  description  = "Administrador do dashboard NFS-e"
   user_pool_id = aws_cognito_user_pool.login.id
+}
+
+resource "aws_cognito_user_group" "user" {
+  name         = "user"
+  description  = "Usuário de um cliente"
+  user_pool_id = aws_cognito_user_pool.login.id
+}
+
+data "aws_iam_policy_document" "eb_ec2_cognito" {
+  statement {
+    sid    = "UsuariosCognito"
+    effect = "Allow"
+    actions = [
+      "cognito-idp:AdminCreateUser",
+      "cognito-idp:AdminAddUserToGroup",
+      "cognito-idp:AdminUpdateUserAttributes",
+      "cognito-idp:AdminEnableUser",
+      "cognito-idp:AdminDisableUser",
+      "cognito-idp:AdminGetUser",
+    ]
+    resources = [aws_cognito_user_pool.login.arn]
+  }
+}
+
+resource "aws_iam_role_policy" "eb_ec2_cognito" {
+  name   = "cognito-usuarios"
+  role   = aws_iam_role.eb_ec2.id
+  policy = data.aws_iam_policy_document.eb_ec2_cognito.json
 }
