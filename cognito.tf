@@ -85,6 +85,24 @@ resource "aws_cognito_user_pool_domain" "login" {
   managed_login_version = 2
 }
 
+# O client nasceu no Terraform; o Managed Login v2 só desenha a tela com um estilo ligado.
+resource "aws_cognito_managed_login_branding" "dashboard" {
+  user_pool_id                = aws_cognito_user_pool.login.id
+  client_id                   = aws_cognito_user_pool_client.dashboard.id
+  use_cognito_provided_values = true
+}
+
+# Grupos criados no console antes do Terraform. O apply da #14 tentou CreateGroup e quebrou.
+import {
+  to = aws_cognito_user_group.admin
+  id = "${aws_cognito_user_pool.login.id}/admin"
+}
+
+import {
+  to = aws_cognito_user_group.user
+  id = "${aws_cognito_user_pool.login.id}/user"
+}
+
 resource "aws_cognito_user_group" "admin" {
   name         = "admin"
   description  = "Administrador do dashboard NFS-e"
