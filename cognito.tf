@@ -80,20 +80,10 @@ resource "aws_cognito_user_pool_client" "dashboard" {
 }
 
 resource "aws_cognito_user_pool_domain" "login" {
-  domain                = "nfse-login-${data.aws_caller_identity.atual.account_id}"
-  user_pool_id          = aws_cognito_user_pool.login.id
-  managed_login_version = 1
-}
-
-# Grupos criados no console antes do Terraform. O apply da #14 tentou CreateGroup e quebrou.
-import {
-  to = aws_cognito_user_group.admin
-  id = "${aws_cognito_user_pool.login.id}/admin"
-}
-
-import {
-  to = aws_cognito_user_group.user
-  id = "${aws_cognito_user_pool.login.id}/user"
+  domain       = "nfse-login-${data.aws_caller_identity.atual.account_id}"
+  user_pool_id = aws_cognito_user_pool.login.id
+  # v2 = login gerenciado. O estilo visual fica no console (o provider 5 não declara branding).
+  managed_login_version = 2
 }
 
 resource "aws_cognito_user_group" "admin" {
