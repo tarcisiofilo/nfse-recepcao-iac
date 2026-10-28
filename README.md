@@ -15,7 +15,7 @@ O estado mora no S3. O GitHub Actions aplica na `main` e planeja nas pull reques
 - Health check em `GET /nfse/totais`. O Liquibase roda nesse primeiro boot.
 - Fila SQS `nfse-relatorios` e bucket `nfse-recepcao-relatorios-<conta>`. A API no perfil `aws` grava `relatorios/{id}/relatorio.zip`. Scheduler ADN continua desligado.
 - Site do dashboard no S3 (HTTP). CloudFront nesta conta pede verificação na AWS. O CI do [nfse-dashboard](https://github.com/tarcisiofilo/nfse-dashboard) publica na `main`.
-- Cognito User Pool `nfse-login`, sem auto cadastro. App client público do dashboard, OAuth code + PKCE. Callback só em `localhost:5173` e `127.0.0.1:5173`. Grupos `admin` (vê todos os clientes) e `user` (um cliente). A instância pode convidar usuário (`AdminCreateUser`). Sem `COGNITO_ISSUER` no Beanstalk por enquanto (dashboard S3 ainda é HTTP). Health `GET /nfse/totais` continua público.
+- Cognito User Pool `nfse-login`, sem auto cadastro. App client público do dashboard, OAuth code + PKCE. Callback só em `localhost:5173` e `127.0.0.1:5173`. Hosted UI clássica (o provider AWS 5 não tem o recurso de branding do Managed Login). Grupos `admin` (vê todos os clientes) e `user` (um cliente). A instância pode convidar usuário (`AdminCreateUser`). Sem `COGNITO_ISSUER` no Beanstalk por enquanto (dashboard S3 ainda é HTTP). Health `GET /nfse/totais` continua público.
 
 Sem Lambda. Scheduler ADN desligado. Sem Identity Pool.
 
