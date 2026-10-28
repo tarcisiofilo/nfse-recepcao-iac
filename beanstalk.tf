@@ -369,6 +369,7 @@ resource "aws_elastic_beanstalk_environment" "api" {
     aws_s3_bucket.relatorios,
     aws_iam_role_policy.eb_ec2_relatorio,
     aws_iam_role_policy.eb_ec2_adn,
+    aws_iam_role_policy.eb_ec2_cognito,
   ]
 
   lifecycle {
