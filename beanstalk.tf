@@ -62,8 +62,10 @@ locals {
     API_CORS_ORIGENS = join(",", [
       "http://localhost:5173",
       "http://127.0.0.1:5173",
-      "http://${aws_s3_bucket_website_configuration.dashboard.website_endpoint}",
     ])
+    COGNITO_ISSUER       = "https://cognito-idp.${var.aws_region}.amazonaws.com/${aws_cognito_user_pool.login.id}"
+    COGNITO_USER_POOL_ID = aws_cognito_user_pool.login.id
+    COGNITO_REGIAO       = var.aws_region
   }
 }
 

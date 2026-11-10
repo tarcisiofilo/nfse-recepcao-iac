@@ -14,8 +14,8 @@ O estado mora no S3. O GitHub Actions aplica na `main` e planeja nas pull reques
 - Elastic Beanstalk Docker AL2023, uma instância `t3.small`, ALB na porta 80. Só usa as subnets das AZs que oferecem esse tipo (a VPC padrão inclui `us-east-1e`, sem `t3.small`). A imagem é `${repository_url}:latest`. Scheduler desligado. Sem certificado ADN. A senha do RDS vai para as variáveis do ambiente (e para o estado do Terraform).
 - Health check em `GET /nfse/totais`. O Liquibase roda nesse primeiro boot.
 - Fila SQS `nfse-relatorios` e bucket `nfse-recepcao-relatorios-<conta>`. A API no perfil `aws` grava `relatorios/{id}/relatorio.zip`. Scheduler ADN continua desligado.
-- Site do dashboard no S3 (HTTP). CloudFront nesta conta pede verificação na AWS. O CI do [nfse-dashboard](https://github.com/tarcisiofilo/nfse-dashboard) publica na `main`.
-- Cognito User Pool `nfse-login`, sem auto cadastro. App client público do dashboard, OAuth code + PKCE. Callback só em `localhost:5173` e `127.0.0.1:5173`. Domínio em Managed Login (v2). O estilo da tela (português) fica no console, fora do Terraform. Grupos `admin` (vê todos os clientes) e `user` (um cliente). A instância pode convidar usuário (`AdminCreateUser`). Sem `COGNITO_ISSUER` no Beanstalk por enquanto (dashboard S3 ainda é HTTP). Health `GET /nfse/totais` continua público.
+- Site do dashboard no CloudFront (HTTPS no `*.cloudfront.net`), origem S3 privada e `/nfse*` na API. O CI do [nfse-dashboard](https://github.com/tarcisiofilo/nfse-dashboard) publica na `main` e invalida o cache.
+- Cognito User Pool `nfse-login`, sem auto cadastro. App client público do dashboard, OAuth code + PKCE. Callback em `localhost:5173` e no HTTPS do CloudFront. Domínio em Managed Login (v2). O estilo da tela (português) fica no console, fora do Terraform. Grupos `admin` (vê todos os clientes) e `user` (um cliente). A instância pode convidar usuário (`AdminCreateUser`). `COGNITO_ISSUER` e o pool vão no Beanstalk. Health `GET /nfse/totais` continua público.
 
 Sem Lambda. Scheduler ADN desligado. Sem Identity Pool.
 
