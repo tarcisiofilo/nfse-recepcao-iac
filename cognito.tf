@@ -54,6 +54,8 @@ resource "aws_cognito_user_pool_client" "dashboard" {
     "http://localhost:5173/",
     "http://127.0.0.1:5173",
     "http://127.0.0.1:5173/",
+    "https://${aws_cloudfront_distribution.dashboard.domain_name}",
+    "https://${aws_cloudfront_distribution.dashboard.domain_name}/",
   ]
 
   logout_urls = [
@@ -61,6 +63,8 @@ resource "aws_cognito_user_pool_client" "dashboard" {
     "http://localhost:5173/",
     "http://127.0.0.1:5173",
     "http://127.0.0.1:5173/",
+    "https://${aws_cloudfront_distribution.dashboard.domain_name}",
+    "https://${aws_cloudfront_distribution.dashboard.domain_name}/",
   ]
 
   explicit_auth_flows = [
