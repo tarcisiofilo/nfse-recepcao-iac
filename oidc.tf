@@ -49,6 +49,20 @@ data "aws_iam_policy_document" "github_ecr" {
     ]
     resources = [aws_ecr_repository.api.arn]
   }
+
+  statement {
+    sid       = "BeanstalkVerAmbiente"
+    effect    = "Allow"
+    actions   = ["elasticbeanstalk:DescribeEnvironments"]
+    resources = ["*"]
+  }
+
+  statement {
+    sid       = "BeanstalkPuxaLatest"
+    effect    = "Allow"
+    actions   = ["elasticbeanstalk:RestartAppServer"]
+    resources = [aws_elastic_beanstalk_environment.api.arn]
+  }
 }
 
 resource "aws_iam_openid_connect_provider" "github" {
