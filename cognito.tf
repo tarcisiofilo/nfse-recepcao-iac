@@ -109,6 +109,7 @@ data "aws_iam_policy_document" "eb_ec2_cognito" {
     actions = [
       "cognito-idp:AdminCreateUser",
       "cognito-idp:AdminAddUserToGroup",
+      "cognito-idp:AdminRemoveUserFromGroup",
       "cognito-idp:AdminUpdateUserAttributes",
       "cognito-idp:AdminEnableUser",
       "cognito-idp:AdminDisableUser",
