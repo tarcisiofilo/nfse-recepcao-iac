@@ -7,11 +7,11 @@ O estado mora no S3. O GitHub Actions aplica na `main` e planeja nas pull reques
 ## O que existe
 
 - ECR `nfse-recepcao` (imagem da API).
-- OIDC do GitHub e duas roles: uma só publica a imagem (`nfse-recepcao`), outra aplica este Terraform (`nfse-recepcao-iac`).
+- OIDC do GitHub e duas roles: uma publica a imagem no ECR e uma versão no Beanstalk (`nfse-recepcao`), outra aplica este Terraform (`nfse-recepcao-iac`).
 - Bucket `nfse-recepcao-iac-estado-069632764371` com o estado. O nome traz a conta porque o backend S3 não aceita variável.
 
 - RDS Postgres 16, banco `nfse`, usuário `nfse`. Senha no Secrets Manager. Porta 5432 só do security group da API. Sem IP público. O schema `nfse_nacional` o Liquibase cria no primeiro boot da API.
-- Elastic Beanstalk Docker AL2023, uma instância `t3.small`, ALB na porta 80. Só usa as subnets das AZs que oferecem esse tipo (a VPC padrão inclui `us-east-1e`, sem `t3.small`). A imagem é `${repository_url}:latest`. Scheduler desligado. Sem certificado ADN. A senha do RDS vai para as variáveis do ambiente (e para o estado do Terraform).
+- Elastic Beanstalk Docker AL2023, uma instância `t3.small`, ALB na porta 80. Só usa as subnets das AZs que oferecem esse tipo (a VPC padrão inclui `us-east-1e`, sem `t3.small`). O CI da API sobe `${repository_url}:<sha>` numa versão nova do Beanstalk. Scheduler desligado. Sem certificado ADN. A senha do RDS vai para as variáveis do ambiente (e para o estado do Terraform).
 - Health check em `GET /nfse/totais`. O Liquibase roda nesse primeiro boot.
 - Fila SQS `nfse-relatorios` e bucket `nfse-recepcao-relatorios-<conta>`. A API no perfil `aws` grava `relatorios/{id}/relatorio.zip`. Scheduler ADN continua desligado.
 - Site do dashboard no CloudFront (HTTPS no `*.cloudfront.net`), origem S3 privada e `/nfse*` na API. O CI do [nfse-dashboard](https://github.com/tarcisiofilo/nfse-dashboard) publica na `main` e invalida o cache.

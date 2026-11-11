@@ -63,6 +63,11 @@ output "api_environment_name" {
   value       = aws_elastic_beanstalk_environment.api.name
 }
 
+output "api_application_name" {
+  description = "Aplicação do Elastic Beanstalk. Variável AWS_EB_APPLICATION do repositório da API."
+  value       = aws_elastic_beanstalk_application.api.name
+}
+
 output "relatorio_fila" {
   description = "Nome da fila SQS dos pedidos de Excel."
   value       = aws_sqs_queue.relatorios.name
