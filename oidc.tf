@@ -58,9 +58,9 @@ data "aws_iam_policy_document" "github_ecr" {
   }
 
   statement {
-    sid     = "BeanstalkPuxaLatest"
-    effect  = "Allow"
-    actions = ["elasticbeanstalk:RestartAppServer"]
+    sid       = "BeanstalkPuxaLatest"
+    effect    = "Allow"
+    actions   = ["elasticbeanstalk:RestartAppServer"]
     resources = [aws_elastic_beanstalk_environment.api.arn]
   }
 }
