@@ -59,7 +59,7 @@ output "api_cname" {
 }
 
 output "api_environment_name" {
-  description = "Nome do ambiente no Elastic Beanstalk."
+  description = "Nome do ambiente no Elastic Beanstalk. Variável AWS_EB_ENVIRONMENT do repositório da API."
   value       = aws_elastic_beanstalk_environment.api.name
 }
 
