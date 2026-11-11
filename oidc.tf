@@ -86,6 +86,36 @@ data "aws_iam_policy_document" "github_ecr" {
   }
 
   statement {
+    sid    = "BeanstalkBucketPadrao"
+    effect = "Allow"
+    actions = [
+      "s3:CreateBucket",
+      "s3:GetBucketLocation",
+      "s3:GetBucketPolicy",
+      "s3:ListBucket",
+      "s3:PutBucketPolicy",
+      "s3:PutEncryptionConfiguration",
+      "s3:PutLifecycleConfiguration",
+    ]
+    resources = [
+      "arn:aws:s3:::elasticbeanstalk-${var.aws_region}-${data.aws_caller_identity.atual.account_id}",
+    ]
+  }
+
+  statement {
+    sid    = "BeanstalkBucketObjetos"
+    effect = "Allow"
+    actions = [
+      "s3:DeleteObject",
+      "s3:GetObject",
+      "s3:PutObject",
+    ]
+    resources = [
+      "arn:aws:s3:::elasticbeanstalk-${var.aws_region}-${data.aws_caller_identity.atual.account_id}/*",
+    ]
+  }
+
+  statement {
     sid    = "BeanstalkCloudFormation"
     effect = "Allow"
     actions = [
