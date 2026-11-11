@@ -51,17 +51,52 @@ data "aws_iam_policy_document" "github_ecr" {
   }
 
   statement {
-    sid       = "BeanstalkVerAmbiente"
-    effect    = "Allow"
-    actions   = ["elasticbeanstalk:DescribeEnvironments"]
+    sid    = "BeanstalkVer"
+    effect = "Allow"
+    actions = [
+      "elasticbeanstalk:DescribeApplicationVersions",
+      "elasticbeanstalk:DescribeEnvironments",
+      "elasticbeanstalk:DescribeEvents",
+    ]
     resources = ["*"]
   }
 
   statement {
-    sid       = "BeanstalkPuxaLatest"
-    effect    = "Allow"
-    actions   = ["elasticbeanstalk:RestartAppServer"]
-    resources = [aws_elastic_beanstalk_environment.api.arn]
+    sid    = "BeanstalkPublica"
+    effect = "Allow"
+    actions = [
+      "elasticbeanstalk:CreateApplicationVersion",
+      "elasticbeanstalk:UpdateEnvironment",
+    ]
+    resources = [
+      aws_elastic_beanstalk_application.api.arn,
+      aws_elastic_beanstalk_environment.api.arn,
+      "${replace(aws_elastic_beanstalk_application.api.arn, ":application/", ":applicationversion/")}/*",
+    ]
+  }
+
+  statement {
+    sid    = "BeanstalkPacote"
+    effect = "Allow"
+    actions = [
+      "s3:GetObject",
+      "s3:PutObject",
+    ]
+    resources = ["${aws_s3_bucket.estado.arn}/beanstalk/*"]
+  }
+
+  statement {
+    sid    = "BeanstalkCloudFormation"
+    effect = "Allow"
+    actions = [
+      "cloudformation:DescribeStackResource",
+      "cloudformation:DescribeStackResources",
+      "cloudformation:DescribeStacks",
+      "cloudformation:GetTemplate",
+    ]
+    resources = [
+      "arn:aws:cloudformation:${var.aws_region}:${data.aws_caller_identity.atual.account_id}:stack/awseb-*",
+    ]
   }
 }
 
