@@ -151,3 +151,8 @@ resource "aws_iam_role_policy" "github_ecr" {
   role   = aws_iam_role.github_ecr.id
   policy = data.aws_iam_policy_document.github_ecr.json
 }
+
+resource "aws_iam_role_policy_attachment" "github_ecr_beanstalk" {
+  role       = aws_iam_role.github_ecr.name
+  policy_arn = "arn:aws:iam::aws:policy/AdministratorAccess-AWSElasticBeanstalk"
+}

@@ -7,7 +7,7 @@ O estado mora no S3. O GitHub Actions aplica na `main` e planeja nas pull reques
 ## O que existe
 
 - ECR `nfse-recepcao` (imagem da API).
-- OIDC do GitHub e duas roles: uma publica a imagem no ECR e uma versão no Beanstalk (`nfse-recepcao`), outra aplica este Terraform (`nfse-recepcao-iac`).
+- OIDC do GitHub e duas roles: uma publica a imagem no ECR e uma versão no Beanstalk (`nfse-recepcao`, com `AdministratorAccess-AWSElasticBeanstalk`), outra aplica este Terraform (`nfse-recepcao-iac`).
 - Bucket `nfse-recepcao-iac-estado-069632764371` com o estado. O nome traz a conta porque o backend S3 não aceita variável.
 
 - RDS Postgres 16, banco `nfse`, usuário `nfse`. Senha no Secrets Manager. Porta 5432 só do security group da API. Sem IP público. O schema `nfse_nacional` o Liquibase cria no primeiro boot da API.
