@@ -137,6 +137,11 @@ resource "aws_iam_role_policy_attachment" "eb_ec2_ecr" {
   policy_arn = "arn:aws:iam::aws:policy/AmazonEC2ContainerRegistryReadOnly"
 }
 
+resource "aws_iam_role_policy_attachment" "eb_ec2_ssm" {
+  role       = aws_iam_role.eb_ec2.name
+  policy_arn = "arn:aws:iam::aws:policy/AmazonSSMManagedInstanceCore"
+}
+
 resource "aws_iam_instance_profile" "eb_ec2" {
   name = "nfse-recepcao-ec2"
   role = aws_iam_role.eb_ec2.name
@@ -366,6 +371,7 @@ resource "aws_elastic_beanstalk_environment" "api" {
     aws_iam_role_policy_attachment.eb_service_updates,
     aws_iam_role_policy_attachment.eb_ec2_web,
     aws_iam_role_policy_attachment.eb_ec2_ecr,
+    aws_iam_role_policy_attachment.eb_ec2_ssm,
     aws_db_instance.nfse,
     aws_sqs_queue.relatorios,
     aws_s3_bucket.relatorios,
