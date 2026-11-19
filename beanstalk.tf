@@ -51,6 +51,7 @@ locals {
     SPRING_DATASOURCE_URL                = "jdbc:postgresql://${aws_db_instance.nfse.address}:${aws_db_instance.nfse.port}/nfse"
     SPRING_DATASOURCE_USERNAME           = "nfse"
     SPRING_DATASOURCE_PASSWORD           = local.rds_segredo.password
+    SPRING_DATASOURCE_PASSWORD_SECRET    = aws_db_instance.nfse.master_user_secret[0].secret_arn
     SPRING_PROFILES_ACTIVE               = "aws"
     SCHEDULER_RECEPCAODFESSERPRO_ENABLED = "false"
     JAVA_TOOL_OPTIONS                    = "-XX:MaxRAMPercentage=75.0"
@@ -372,6 +373,7 @@ resource "aws_elastic_beanstalk_environment" "api" {
     aws_iam_role_policy.eb_ec2_relatorio,
     aws_iam_role_policy.eb_ec2_adn,
     aws_iam_role_policy.eb_ec2_cognito,
+    aws_iam_role_policy.eb_ec2_rds,
   ]
 
   lifecycle {
