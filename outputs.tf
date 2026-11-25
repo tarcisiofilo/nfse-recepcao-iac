@@ -78,6 +78,11 @@ output "relatorio_bucket" {
   value       = aws_s3_bucket.relatorios.bucket
 }
 
+output "simples_nacional_bucket" {
+  description = "Bucket dos ZIPs do Simples Nacional. Chave simples-nacional/{clienteId}/{tipo}/{nome}"
+  value       = aws_s3_bucket.simples_nacional.bucket
+}
+
 output "dashboard_url" {
   description = "HTTPS do dashboard no CloudFront. Callback do Cognito e origem do download."
   value       = "https://${aws_cloudfront_distribution.dashboard.domain_name}"

@@ -60,6 +60,7 @@ locals {
     RELATORIO_FILA                       = aws_sqs_queue.relatorios.name
     RELATORIO_BUCKET                     = aws_s3_bucket.relatorios.bucket
     RELATORIO_REGIAO                     = var.aws_region
+    SIMPLES_NACIONAL_BUCKET              = aws_s3_bucket.simples_nacional.bucket
     API_CORS_ORIGENS = join(",", [
       "http://localhost:5173",
       "http://127.0.0.1:5173",
@@ -370,7 +371,9 @@ resource "aws_elastic_beanstalk_environment" "api" {
     aws_db_instance.nfse,
     aws_sqs_queue.relatorios,
     aws_s3_bucket.relatorios,
+    aws_s3_bucket.simples_nacional,
     aws_iam_role_policy.eb_ec2_relatorio,
+    aws_iam_role_policy.eb_ec2_simples_nacional,
     aws_iam_role_policy.eb_ec2_adn,
     aws_iam_role_policy.eb_ec2_cognito,
     aws_iam_role_policy.eb_ec2_rds,
